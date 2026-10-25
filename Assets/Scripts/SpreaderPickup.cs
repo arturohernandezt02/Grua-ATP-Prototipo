@@ -65,4 +65,6 @@ public class SpreaderPickup : MonoBehaviour
         isAttached = false;
         Debug.Log("Contenedor DESENGANCHADO.");
     }
+
+    public bool IsAttached => isAttached;
 }
