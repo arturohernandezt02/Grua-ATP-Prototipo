@@ -21,7 +21,7 @@ public class CraneController : MonoBehaviour
 
     void Start()
     {
-        if (spreader != null)
+        if (spreader != null && trolley != null)
         {
             joint = spreader.GetComponent<ConfigurableJoint>();
             if (joint != null)
@@ -31,6 +31,14 @@ public class CraneController : MonoBehaviour
                 joint.autoConfigureConnectedAnchor = false;
                 joint.connectedAnchor = new Vector3(0, -currentCableLength, 0);
             }
+            else
+            {
+                Debug.LogWarning("[CraneController] No se encontró ConfigurableJoint en 'spreader'. El izaje no funcionará.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[CraneController] Faltan referencias 'spreader' o 'trolley'.");
         }
     }
 
@@ -63,11 +71,10 @@ public class CraneController : MonoBehaviour
 
         if (inputY != 0f)
         {
-            // Ajustamos la longitud del cable
+            // longitud del cable
             currentCableLength += inputY * hoistSpeed * Time.deltaTime;
             currentCableLength = Mathf.Clamp(currentCableLength, minCableLength, maxCableLength);
 
-            // Modificamos el anclaje del Joint directamente
             joint.connectedAnchor = new Vector3(0, -currentCableLength, 0);
         }
     }

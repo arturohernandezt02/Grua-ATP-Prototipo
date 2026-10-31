@@ -20,6 +20,15 @@ public class UIHUDManager : MonoBehaviour
         {
             pickupScript = spreader.GetComponent<SpreaderPickup>();
         }
+        else
+        {
+            Debug.LogWarning("[UIHUDManager] 'spreader' no asignado.");
+        }
+
+        if (textStatus == null || textHeight == null || textWeight == null)
+        {
+            Debug.LogWarning("[UIHUDManager] Faltan referencias a elementos TMP_Text en el HUD.");
+        }
     }
 
     void Update()
@@ -29,7 +38,7 @@ public class UIHUDManager : MonoBehaviour
 
     void UpdateTelemetry()
     {
-        if (spreader == null) return;
+        if (spreader == null || textHeight == null) return;
 
         // Calcular altura respecto al suelo
         float groundY = (ground != null) ? ground.position.y : 0f;
@@ -39,17 +48,15 @@ public class UIHUDManager : MonoBehaviour
         // Actualizar estado de enganche
         if (pickupScript != null)
         {
-            if (pickupScript.IsAttached) // Crearemos esta propiedad en SpreaderPickup
+            if (pickupScript.IsAttached) // Propiedad en SpreaderPickup
             {
-                textStatus.text = "Estado: CARGA ENGANCHADA";
-                textStatus.color = Color.green;
-                textWeight.text = "Peso Carga: 24,000 kg (20ft)";
+                if (textStatus != null) { textStatus.text = "Estado: CARGA ENGANCHADA"; textStatus.color = Color.green; }
+                if (textWeight != null) textWeight.text = "Peso Carga: 24,000 kg (20ft)";
             }
             else
             {
-                textStatus.text = "Estado: SIN CARGA";
-                textStatus.color = Color.yellow;
-                textWeight.text = "Peso Carga: 0 kg";
+                if (textStatus != null) { textStatus.text = "Estado: SIN CARGA"; textStatus.color = Color.yellow; }
+                if (textWeight != null) textWeight.text = "Peso Carga: 0 kg";
             }
         }
     }

@@ -10,6 +10,11 @@ public class CameraSwitcher : MonoBehaviour
     {
         if (Input.GetKeyDown(switchKey))
         {
+            if (tacticalCamera == null || operatorCamera == null)
+            {
+                Debug.LogWarning("[CameraSwitcher] Faltan referencias a las cámaras.");
+                return;
+            }
             bool isTacticalActive = tacticalCamera.enabled;
             tacticalCamera.enabled = !isTacticalActive;
             operatorCamera.enabled = isTacticalActive;

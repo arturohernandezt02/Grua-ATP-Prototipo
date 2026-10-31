@@ -4727,7 +4727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpreaderPickup
   attachKey: 101
   enableWind: 1
-  windIntensity: 25
+  windIntensity: 57.4
   windFrequency: 1.2
 --- !u!65 &2062434605
 BoxCollider:

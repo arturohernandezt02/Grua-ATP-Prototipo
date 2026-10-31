@@ -21,6 +21,10 @@ public class SpreaderPickup : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogWarning("[SpreaderPickup] No se encontró Rigidbody en este GameObject. El viento no se aplicará.");
+        }
     }
 
     void Update()
@@ -40,7 +44,6 @@ public class SpreaderPickup : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Aplicar la fuerza del viento en el ciclo de físicas (FixedUpdate)
         ApplyWindForce();
     }
 
@@ -48,7 +51,7 @@ public class SpreaderPickup : MonoBehaviour
     {
         if (!enableWind || rb == null) return;
 
-        // Genera ráfagas de viento oscilantes usando una combinación de ondas seno
+        // Genera ráfagas de viento oscilantes
         float windVariation = Mathf.Sin(Time.time * windFrequency) * Mathf.Cos(Time.time * 0.7f);
         
         // La fuerza actúa principalmente en el eje lateral (Z o X según la orientación de tu escena)
@@ -83,12 +86,20 @@ public class SpreaderPickup : MonoBehaviour
     void AttachContainer()
     {
         if (currentContainer == null) return;
+        if (joint != null) return; // Ya hay un enganche
+        Rigidbody containerRb = currentContainer.GetComponent<Rigidbody>();
+        if (containerRb == null)
+        {
+            Debug.LogWarning("[SpreaderPickup] El contenedor no tiene Rigidbody. No se puede enganchar.");
+            return;
+        }
 
         // Crear un FixedJoint dinámicamente para sujetar el contenedor al Spreader
         joint = gameObject.AddComponent<FixedJoint>();
-        joint.connectedBody = currentContainer.GetComponent<Rigidbody>();
+        joint.connectedBody = containerRb;
         
         isAttached = true;
+        currentContainer = null; // Evita re-detectar
         Debug.Log("Contenedor ENGANCHADO.");
     }
 
@@ -97,6 +108,7 @@ public class SpreaderPickup : MonoBehaviour
         if (joint != null)
         {
             Destroy(joint);
+            joint = null;
         }
 
         isAttached = false;
